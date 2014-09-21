@@ -119,6 +119,7 @@ class EpiDatabase
     {
       $this->dbh = new PDO($this->_type . ':host=' . $this->_host . ';dbname=' . $this->_name, $this->_user, $this->_pass);
       $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $this->dbh->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
     }
     catch(Exception $e)
     {

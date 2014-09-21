@@ -55,7 +55,8 @@ class AjaxAPI {
 		['rel' => 'delete dept man', 'method' => 'DELETE', 'href' => '/departments/(\w{4})/managers'],
 
 		['rel' => 'list employees', 'method'   => 'GET',    'href' => '/employees'],
-		['rel' => 'show employees', 'method'   => 'GET',    'href' => '/employees/(\d+)'],
+		['rel' => 'list employees n', 'method'   => 'GET',    'href' => '/employees/(\d+)'],
+		['rel' => 'show employees', 'method'   => 'GET',    'href' => '/employees/(\d+)/profile'],
 		['rel' => 'add employees', 'method'    => 'PUT',    'href' => '/employees/(\d+)'],
 		['rel' => 'update employees', 'method' => 'POST',   'href' => '/employees/(\d+)'],
 		['rel' => 'delete employees', 'method' => 'DELETE', 'href' => '/employees/(\d+)'],
@@ -87,6 +88,7 @@ class AjaxAPI {
 		'update dept man'    => 'DepartmentManagerUpdate',
 		'delete dept man'    => 'DepartmentManagerDelete',
 		'list employees'     => 'EmployeeList',
+		'list employees n'   => 'EmployeeListN',
 		'show employees'     => 'EmployeeShow',
 		'add employees'      => 'EmployeeAdd',
 		'update employees'   => 'EmployeeUpdate',
@@ -286,6 +288,35 @@ class AjaxAPI {
 
 	public static function EmployeeList() {
 		$results = getDatabase()->all("SELECT * FROM employees e ORDER BY e.emp_no DESC LIMIT 0, 25");
+
+		$newEmpNo = AjaxAPI::getNewEmployeeNo();
+		foreach ($results as $key => &$result) {
+			$empNo = $result['emp_no'];
+			$result["links"] = [
+					["href"   => "/employees",
+					 "rel"    => "list employees",
+					 "method" => "GET"],
+					["href"   => "/employees/" . $empNo,
+					 "rel"    => "show employees",
+					 "method" => "GET"],
+					["href"   => "/employees/" . $newEmpNo,
+					 "rel"    => "add employees",
+					 "method" => "PUT"],
+					["href"   => "/employees/" . $empNo,
+					 "rel"    => "update employees",
+					 "method" => "POST"],
+					["href"   => "/employees/" . $empNo,
+					 "rel"    => "delete employees",
+					 "method" => "DELETE"],
+			];
+		}
+
+		echo json_encode($results);
+	}
+
+	public static function EmployeeListN($page) {
+        $query = "SELECT * FROM employees e ORDER BY e.emp_no DESC LIMIT :offset, :perpage";
+		$results = getDatabase()->all($query, array(":offset" => ($page - 1) * 25, ":perpage" => 25));
 
 		$newEmpNo = AjaxAPI::getNewEmployeeNo();
 		foreach ($results as $key => &$result) {
