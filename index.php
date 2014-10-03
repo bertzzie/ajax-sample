@@ -167,7 +167,7 @@ class AjaxAPI {
 					"method" => "PUT"],
 					["href"  => "/departments/" . $no,
 					"rel"    => "update departments",
-					"method" => "UPDATE"],
+					"method" => "POST"],
 					["href"  => "/departments/" . $no,
 					"rel"    => "delete departments",
 					"method" => "DELETE"]
@@ -183,7 +183,8 @@ class AjaxAPI {
 
 	public static function DepartmentAdd($id) {
 		$query = "INSERT INTO departments(dept_no, dept_name) VALUES (:dept_no, :dept_name)";
-		$data  = json_decode(file_get_contents("php://input"), true);
+		$input = file_get_contents("php://input");
+		parse_str($input, $data);
 		$name  = $data["dept_name"];
 
 		try {
@@ -203,7 +204,7 @@ class AjaxAPI {
 					"method" => "PUT"],
 					["href"  => "/departments/" . $id,
 					"rel"    => "update departments",
-					"method" => "UPDATE"],
+					"method" => "POST"],
 					["href"  => "/departments/" . $id,
 					"rel"    => "delete departments",
 					"method" => "DELETE"]
@@ -214,13 +215,14 @@ class AjaxAPI {
 		} catch (Exception $e) {
 			http_response_code(500);
 			echo "Insert Failed";
+            echo $e->getMessage();
 		}
 	}
 
 	public static function DepartmentUpdate($id) {
 		$query = "UPDATE departments SET dept_name = :dept_name WHERE dept_no = :dept_no";
-		$data  = json_decode(file_get_contents("php://input"), true);
-		$name  = $data["dept_name"];
+        //parse_str(file_get_contents("php://input"), $data);
+		$name  = $_REQUEST["dept_name"];
 
 		try {
 			getDatabase()->execute($query, array(':dept_no' => $id, ':dept_name' => $name));
@@ -239,7 +241,7 @@ class AjaxAPI {
 					"method" => "PUT"],
 					["href"  => "/departments/" . $id,
 					"rel"    => "update departments",
-					"method" => "UPDATE"],
+					"method" => "POST"],
 					["href"  => "/departments/" . $id,
 					"rel"    => "delete departments",
 					"method" => "DELETE"]
@@ -272,7 +274,7 @@ class AjaxAPI {
 					"method" => "PUT"],
 					["href"  => "/departments/" . $id,
 					"rel"    => "update departments",
-					"method" => "UPDATE"],
+					"method" => "POST"],
 					["href"  => "/departments/" . $id,
 					"rel"    => "delete departments",
 					"method" => "DELETE"]
@@ -364,7 +366,7 @@ class AjaxAPI {
 					"method" => "PUT"],
 					["href"  => "/employees/" . $no,
 					"rel"    => "update employees",
-					"method" => "UPDATE"],
+					"method" => "POST"],
 					["href"  => "/employees/" . $no,
 					"rel"    => "delete employees",
 					"method" => "DELETE"]
@@ -382,7 +384,7 @@ class AjaxAPI {
 		$query = "INSERT INTO employees(emp_no, birth_date, first_name, last_name, gender, hire_date) 
 		          VALUES (:emp_no, :birth_date, :first_name, :last_name, :gender, :hire_date)";
 
-		$data  = json_decode(file_get_contents("php://input"), true);
+        parse_str(file_get_contents("php://input"), $data);
 		$no    = $id;
 
 		try {
@@ -416,7 +418,7 @@ class AjaxAPI {
 					"method" => "PUT"],
 					["href"  => "/employees/" . $no,
 					"rel"    => "update employees",
-					"method" => "UPDATE"],
+					"method" => "POST"],
 					["href"  => "/employees/" . $no,
 					"rel"    => "delete employees",
 					"method" => "DELETE"]
@@ -438,7 +440,7 @@ class AjaxAPI {
 		              gender = :gender, 
 		              hire_date = :hire_date
 		          WHERE emp_no = :emp_no";
-		$data  = json_decode(file_get_contents("php://input"), true);
+        parse_str(file_get_contents("php://input"), $data);
 		$no    = $id;
 
 		try {
@@ -472,7 +474,7 @@ class AjaxAPI {
 					"method" => "PUT"],
 					["href"  => "/employees/" . $no,
 					"rel"    => "update employees",
-					"method" => "UPDATE"],
+					"method" => "POST"],
 					["href"  => "/employees/" . $no,
 					"rel"    => "delete employees",
 					"method" => "DELETE"]
@@ -506,7 +508,7 @@ class AjaxAPI {
 					"method" => "PUT"],
 					["href"  => "/employees/" . $no,
 					"rel"    => "update employees",
-					"method" => "UPDATE"],
+					"method" => "POST"],
 					["href"  => "/employees/" . $no,
 					"rel"    => "delete employees",
 					"method" => "DELETE"]
